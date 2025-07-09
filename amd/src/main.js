@@ -5,7 +5,8 @@ define(
         'block_configurable_reports/jquery.dataTables',
         'block_configurable_reports/codemirror',
         'block_configurable_reports/sql'
-    ], function($, tablesorter, dataTable, CodeMirror) {
+    ],
+    function($, tablesorter, dataTable, CodeMirror) {
         return {
             js_order: function(params) {
                 $(params.selector).tablesorter();

@@ -32,7 +32,9 @@ export const init = () => {
         mode: 'text/x-mysql',
         styleActiveLine: true,
         lineNumbers: true,
-        extraKeys: { "Ctrl-Space": "autocomplete" }
+        extraKeys: {
+            "Ctrl-Space": "autocomplete"
+        }
     });
     editor.setSize('100%', 400);
 
@@ -40,14 +42,16 @@ export const init = () => {
         mode: 'text/x-mysql',
         styleActiveLine: true,
         lineNumbers: true,
-        extraKeys: { "Ctrl-Space": "autocomplete" }
+        extraKeys: {
+            "Ctrl-Space": "autocomplete"
+        }
     });
     editor_remote.setSize('100%', 400);
 
-    CodeMirror.commands.autocomplete = function (cm) {
+    CodeMirror.commands.autocomplete = function(cm) {
         CodeMirror.showHint(cm, CodeMirror.hint.sql, {
             tables: AUTOCOMPLETE_TABLES,
             disableKeywords: true
         });
-    }
+    };
 };

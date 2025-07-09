@@ -42,9 +42,23 @@ class customsql_form extends moodleform {
      * Form definition
      */
     public function definition(): void {
-        global $COURSE;
+        global $COURSE, $PAGE, $DB;
 
         $mform =& $this->_form;
+
+        if (get_config('block_configurable_reports', 'sqlsyntaxhighlight')) {
+            $PAGE->requires->js_call_amd('block_configurable_reports/editor', 'init');
+
+            $tablearray = $DB->get_tables();
+            $tableobject  = new stdClass();
+            foreach ($tablearray as $table) {
+                $prefixtable = $table;
+                $tableobject->$prefixtable = array_keys($DB->get_columns($table));
+            }
+            $tablejson = json_encode($tableobject);
+            $mform->addElement('hidden', 'tablejson', $tablejson, ['id' => 'tablejson']);
+            $mform->setType('tablejson', PARAM_RAW);
+        }
 
         $mform->addElement('textarea', 'querysql', get_string('querysql', 'block_configurable_reports'), 'rows="35" cols="80"');
         $mform->addRule('querysql', get_string('required'), 'required', null, 'client');
