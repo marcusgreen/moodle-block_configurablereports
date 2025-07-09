@@ -21,9 +21,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 import CodeMirror from 'block_configurable_reports/codemirror/lib/codemirror';
-import showhint from 'block_configurable_reports/codemirror/addon/hint/show-hint';
-import hint from 'block_configurable_reports/codemirror/addon/hint/sql-hint';
-import mode from 'block_configurable_reports/codemirror/mode/sql/sql';
+import 'block_configurable_reports/codemirror/mode/sql/sql';
+import 'block_configurable_reports/codemirror/addon/hint/show-hint';
+import 'block_configurable_reports/codemirror/addon/hint/sql-hint';
 
 export const init = () => {
     var tablejson = document.getElementById('tablejson');
@@ -36,7 +36,7 @@ export const init = () => {
             "Ctrl-Space": "autocomplete"
         }
     });
-    editor.setSize('100%', 400);
+    editor.setSize('100%', 50);
 
     var editor_remote = CodeMirror.fromTextArea(document.getElementById('id_remotequerysql'), {
         mode: 'text/x-mysql',
@@ -46,7 +46,7 @@ export const init = () => {
             "Ctrl-Space": "autocomplete"
         }
     });
-    editor_remote.setSize('100%', 400);
+    editor_remote.setSize('100%', 50);
 
     CodeMirror.commands.autocomplete = function(cm) {
         CodeMirror.showHint(cm, CodeMirror.hint.sql, {

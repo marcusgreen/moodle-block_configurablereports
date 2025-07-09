@@ -1,3 +1,40 @@
+.CodeMirror-hints {
+    position: absolute;
+    z-index: 10;
+    overflow: hidden;
+    list-style: none;
+
+    margin: 0;
+    padding: 2px;
+
+    -webkit-box-shadow: 2px 3px 5px rgba(0, 0, 0, .2);
+    -moz-box-shadow: 2px 3px 5px rgba(0, 0, 0, .2);
+    box-shadow: 2px 3px 5px rgba(0, 0, 0, .2);
+    border-radius: 3px;
+    border: 1px solid silver;
+
+    background: white;
+    font-size: 90%;
+    font-family: monospace;
+
+    max-height: 20em;
+    overflow-y: auto;
+}
+
+.CodeMirror-hint {
+    margin: 0;
+    padding: 0 4px;
+    border-radius: 2px;
+    white-space: pre;
+    color: black;
+    cursor: pointer;
+}
+
+li.CodeMirror-hint-active {
+    background: #08f;
+    color: white;
+}
+
 /* TODO This is not strict to the plugin scope */
 
 .dir-rtl .CodeMirror {
@@ -38,7 +75,7 @@
 #page-blocks-configurable_reports-viewreport .generaltable {
     border: 1px solid rgb(128, 128, 128);
     margin: 0 auto;
-    
+
 }
 
 #page-blocks-configurable_reports-viewreport #calcstable {
@@ -408,16 +445,20 @@ table.dataTable thead td:active {
 /* PADDING */
 
 .CodeMirror-lines {
-    padding: 4px 0; /* Vertical padding around content */
+    padding: 4px 0;
+    /* Vertical padding around content */
 }
 
 .CodeMirror pre.CodeMirror-line,
 .CodeMirror pre.CodeMirror-line-like {
-    padding: 0 4px; /* Horizontal padding of content */
+    padding: 0 4px;
+    /* Horizontal padding of content */
 }
 
-.CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {
-    background-color: white; /* The little square between H and V scrollbars */
+.CodeMirror-scrollbar-filler,
+.CodeMirror-gutter-filler {
+    background-color: white;
+    /* The little square between H and V scrollbars */
 }
 
 /* GUTTER */
@@ -428,8 +469,7 @@ table.dataTable thead td:active {
     white-space: nowrap;
 }
 
-.CodeMirror-linenumbers {
-}
+.CodeMirror-linenumbers {}
 
 .CodeMirror-linenumber {
     padding: 0 3px 0 5px;
@@ -471,14 +511,14 @@ table.dataTable thead td:active {
 }
 
 .cm-fat-cursor .CodeMirror-line::selection,
-.cm-fat-cursor .CodeMirror-line > span::selection,
-.cm-fat-cursor .CodeMirror-line > span > span::selection {
+.cm-fat-cursor .CodeMirror-line>span::selection,
+.cm-fat-cursor .CodeMirror-line>span>span::selection {
     background: transparent;
 }
 
 .cm-fat-cursor .CodeMirror-line::-moz-selection,
-.cm-fat-cursor .CodeMirror-line > span::-moz-selection,
-.cm-fat-cursor .CodeMirror-line > span > span::-moz-selection {
+.cm-fat-cursor .CodeMirror-line>span::-moz-selection,
+.cm-fat-cursor .CodeMirror-line>span>span::-moz-selection {
     background: transparent;
 }
 
@@ -487,38 +527,37 @@ table.dataTable thead td:active {
 }
 
 @-moz-keyframes blink {
-    0% {
-    }
+    0% {}
+
     50% {
         background-color: transparent;
     }
-    100% {
-    }
+
+    100% {}
 }
 
 @-webkit-keyframes blink {
-    0% {
-    }
+    0% {}
+
     50% {
         background-color: transparent;
     }
-    100% {
-    }
+
+    100% {}
 }
 
 @keyframes blink {
-    0% {
-    }
+    0% {}
+
     50% {
         background-color: transparent;
     }
-    100% {
-    }
+
+    100% {}
 }
 
 /* Can style cursor different in overwrite (non-insert) mode */
-.CodeMirror-overwrite .CodeMirror-cursor {
-}
+.CodeMirror-overwrite .CodeMirror-cursor {}
 
 .cm-tab {
     display: inline-block;
@@ -559,7 +598,8 @@ table.dataTable thead td:active {
     color: #292;
 }
 
-.cm-header, .cm-strong {
+.cm-header,
+.cm-strong {
     font-weight: bold;
 }
 
@@ -594,14 +634,14 @@ table.dataTable thead td:active {
 .cm-s-default .cm-variable,
 .cm-s-default .cm-punctuation,
 .cm-s-default .cm-property,
-.cm-s-default .cm-operator {
-}
+.cm-s-default .cm-operator {}
 
 .cm-s-default .cm-variable-2 {
     color: #05a;
 }
 
-.cm-s-default .cm-variable-3, .cm-s-default .cm-type {
+.cm-s-default .cm-variable-3,
+.cm-s-default .cm-type {
     color: #085;
 }
 
@@ -691,14 +731,16 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 }
 
 .CodeMirror-scroll {
-    overflow: scroll !important; /* Things will break if this is overridden */
+    overflow: scroll !important;
+    /* Things will break if this is overridden */
     /* 50px is the magic margin used to hide the element's real scrollbars */
     /* See overflow: hidden in .CodeMirror */
     margin-bottom: -50px;
     margin-right: -50px;
     padding-bottom: 50px;
     height: 100%;
-    outline: none; /* Prevent dragging from highlighting the element */
+    outline: none;
+    /* Prevent dragging from highlighting the element */
     position: relative;
     z-index: 0;
 }
@@ -711,7 +753,10 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 /* The fake, visible scrollbars. Used to force redraw during scrolling
    before actual scrolling happens, thus preventing shaking and
    flickering artifacts. */
-.CodeMirror-vscrollbar, .CodeMirror-hscrollbar, .CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {
+.CodeMirror-vscrollbar,
+.CodeMirror-hscrollbar,
+.CodeMirror-scrollbar-filler,
+.CodeMirror-gutter-filler {
     position: absolute;
     z-index: 6;
     display: none;
@@ -788,7 +833,8 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 
 .CodeMirror-lines {
     cursor: text;
-    min-height: 1px; /* prevents collapsing before first draw */
+    min-height: 1px;
+    /* prevents collapsing before first draw */
 }
 
 .CodeMirror pre.CodeMirror-line,
@@ -833,11 +879,11 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 .CodeMirror-linewidget {
     position: relative;
     z-index: 2;
-    padding: 0.1px; /* Force widget margins to stay inside of the container */
+    padding: 0.1px;
+    /* Force widget margins to stay inside of the container */
 }
 
-.CodeMirror-widget {
-}
+.CodeMirror-widget {}
 
 .CodeMirror-rtl pre {
     direction: rtl;
@@ -900,11 +946,15 @@ div.CodeMirror-dragcursors {
     cursor: crosshair;
 }
 
-.CodeMirror-line::selection, .CodeMirror-line > span::selection, .CodeMirror-line > span > span::selection {
+.CodeMirror-line::selection,
+.CodeMirror-line>span::selection,
+.CodeMirror-line>span>span::selection {
     background: #d7d4f0;
 }
 
-.CodeMirror-line::-moz-selection, .CodeMirror-line > span::-moz-selection, .CodeMirror-line > span > span::-moz-selection {
+.CodeMirror-line::-moz-selection,
+.CodeMirror-line>span::-moz-selection,
+.CodeMirror-line>span>span::-moz-selection {
     background: #d7d4f0;
 }
 
@@ -919,6 +969,7 @@ div.CodeMirror-dragcursors {
 }
 
 @media print {
+
     /* Hide the cursor when printing */
     .CodeMirror div.CodeMirror-cursors {
         visibility: hidden;
