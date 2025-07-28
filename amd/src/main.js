@@ -3,7 +3,7 @@ define(
         'jquery',
         'block_configurable_reports/jquery.tablesorter',
         'block_configurable_reports/jquery.dataTables',
-        'block_configurable_reports/codemirror',
+        'block_configurable_reports/codemirror/lib/codemirror',
         'block_configurable_reports/sql'
     ],
     function($, tablesorter, dataTable, CodeMirror) {
@@ -27,10 +27,17 @@ define(
             },
             add_jsdatatables: function(params) {
                 $(params.selector).dataTable({
+                    "iDisplayLength": 25,
+                    'aLengthMenu': [
+                        [25, 100, 200, -1],
+                        [25, 100, 200, 'All']
+                    ],
+                    "sScrollY": "700",
+                    //"bScrollCollapse": false,
+                    //"bScrollInfinite": true,
                     'bAutoWidth': false,
                     'sPaginationType': 'full_numbers',
                     'fixedHeader': true,
-                    'aaSorting': [],
                     'oLanguage': {
                         'oAria': {
                             'sSortAscending': M.str.block_configurable_reports.datatables_sortascending,
