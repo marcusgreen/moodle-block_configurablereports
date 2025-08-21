@@ -1,167 +1,170 @@
-/* TODO needs to be converted to AMD and converted to vanila JS */
+/**
+ * Plain JavaScript version of configurable_reports.js
+ * Converted from YUI to vanilla JavaScript and Fetch API.
+ */
 
 var editor_querysql = null;
 var editor_remotequerysql = null;
 
+/* Namespace for configurable reports plain JS */
 M.block_configurable_reports = {
 
-
-    init: function(Y) {
-        this.Y = Y;
-
-        // Documentation can be found @ http://codemirror.net/
-        editor_querysql = CodeMirror.fromTextArea(document.getElementById('id_querysql'), {
-            mode: "text/x-mysql",
-            rtlMoveVisually: true,
-            indentWithTabs: true,
-            smartIndent: true,
-            lineNumbers: true,
-            matchBrackets: true,
-            autofocus: true,
-        });
-
-        editor_remotequerysql = CodeMirror.fromTextArea(document.getElementById('id_remotequerysql'), {
-            mode: "text/x-mysql",
-            rtlMoveVisually: true,
-            indentWithTabs: true,
-            smartIndent: true,
-            lineNumbers: true,
-            matchBrackets: true,
-        });
-
-    },
-
-    loadReportCategories: function(Y) {
-        this.Y = Y;
-
-        select_reportcategories = Y.one('#id_crreportcategories');
-        Y.io(M.cfg.wwwroot + '/blocks/configurable_reports/repository.php', {
-            data: 'action=listreports&sesskey=' + M.cfg.sesskey,
-            context: this,
-            method: "GET",
-            on: {
-                success: function(id, o) {
-                    var response = Y.JSON.parse(o.responseText);
-
-                    for (var prop in response) {
-                        if (response.hasOwnProperty(prop)) {
-                            option = Y.Node.create('<option value=' + response[prop]["path"] + '>' + response[prop]["name"] + '</option>');
-                            select_reportcategories.appendChild(option);
-                        }
-                    }
-
-                },
-                failure: function(id, o) {
-                    // TODO use strings.
-                    window.alert('Repository unreachable');
-                }
+    init: function() {
+        // Documentation for CodeMirror: http://codemirror.net/
+        editor_querysql = CodeMirror.fromTextArea(
+            document.getElementById('id_querysql'), {
+                mode: 'text/x-mysql',
+                rtlMoveVisually: true,
+                indentWithTabs: true,
+                smartIndent: true,
+                lineNumbers: true,
+                matchBrackets: true,
+                autofocus: true
             }
-        });
+        );
 
-    },
-
-    onchange_crreportcategories: function(select_element) {
-        var Y = this.Y;
-
-        select_reportnames = Y.one('#id_crreportnames');
-
-        Y.io(M.cfg.wwwroot + '/blocks/configurable_reports/repository.php', {
-            data: 'action=listcategory&category=' + select_element[select_element.selectedIndex].value + '&sesskey=' + M.cfg.sesskey,
-            context: this,
-            method: "GET",
-            on: {
-                success: function(id, o) {
-                    var response = Y.JSON.parse(o.responseText);
-                    select_reportnames.get('childNodes').remove();
-                    option = Y.Node.create('<option value="-1">...</option>');
-                    select_reportnames.appendChild(option);
-
-                    for (var prop in response) {
-                        if (response.hasOwnProperty(prop)) {
-                            option = Y.Node.create('<option value=' + response[prop]["git_url"] + '>' + response[prop]["name"] + '</option>');
-                            select_reportnames.appendChild(option);
-                        }
-                    }
-                },
-                failure: function(id, o) {
-                    window.alert('Repository unreachable');
-                }
+        editor_remotequerysql = CodeMirror.fromTextArea(
+            document.getElementById('id_remotequerysql'), {
+                mode: 'text/x-mysql',
+                rtlMoveVisually: true,
+                indentWithTabs: true,
+                smartIndent: true,
+                lineNumbers: true,
+                matchBrackets: true
             }
-        });
+        );
     },
 
-    onchange_crreportnames: function(select_element) {
-        var Y = this.Y;
+    loadReportCategories: function() {
+        var select = document.getElementById('id_crreportcategories');
+        var url = M.cfg.wwwroot +
+            '/blocks/configurable_reports/repository.php' +
+            '?action=listreports&sesskey=' + encodeURIComponent(M.cfg.sesskey);
 
-        var path = select_element[select_element.selectedIndex].value;
-        location.href = location.href + "&importurl=" + encodeURIComponent(path);
+        fetch(url)
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                Object.keys(data).forEach(function(key) {
+                    var opt = document.createElement('option');
+                    opt.value = data[key].path;
+                    opt.textContent = data[key].name;
+                    select.appendChild(opt);
+                });
+            })
+            .catch(function() {
+                window.alert('Repository unreachable');
+            });
     },
 
-    onchange_reportcategories: function(select_element) {
-        var Y = this.Y;
+    onchange_crreportcategories: function(select) {
+        var selectNames = document.getElementById('id_crreportnames');
+        var category = select.options[select.selectedIndex].value;
+        var url = M.cfg.wwwroot +
+            '/blocks/configurable_reports/repository.php' +
+            '?action=listcategory&category=' + encodeURIComponent(category) +
+            '&sesskey=' + encodeURIComponent(M.cfg.sesskey);
 
-        select_reportsincategory = Y.one('#id_reportsincategory');
-        select_reportsincategory.setStyle('visibility', 'hidden');
-        Y.io(M.cfg.wwwroot + '/blocks/configurable_reports/list_reports_in_category.php', {
-            data: 'category=' + select_element[select_element.selectedIndex].value + '&sesskey=' + M.cfg.sesskey,
-            context: this,
-            method: "GET",
-            on: {
-                success: function(id, o) {
-                    var response = Y.JSON.parse(o.responseText);
-                    var list = Y.Node.create('<select>');
-                    option = Y.Node.create('<option value="-1">Choose...</option>');
-                    list.appendChild(option);
+        fetch(url)
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                selectNames.innerHTML = '';
+                var defaultOpt = document.createElement('option');
+                defaultOpt.value = '-1';
+                defaultOpt.textContent = '...';
+                selectNames.appendChild(defaultOpt);
 
-                    for (var prop in response) {
-                        if (response.hasOwnProperty(prop)) {
-                            option = Y.Node.create('<option value=' + response[prop]["fullname"] + '>' + response[prop]["name"] + '</option>');
-                            list.appendChild(option);
-                        }
-                    }
-                    select_reportsincategory.setStyle('visibility', 'visible');
-                    list.setAttribute('id', 'id_reportsincategory');
-                    list.setAttribute('name', 'reportsincategory');
-                    list.setAttribute('onchange', 'M.block_configurable_reports.onchange_reportsincategory(this,"' + this.sesskey + '")');
-                    select_reportsincategory.replace(list);
-                },
-                failure: function(id, o) {
-                    if (o.statusText != 'abort') {
-                        select_reportsincategory.setStyle('visibility', 'hidden');
-                    }
+                Object.keys(data).forEach(function(key) {
+                    var opt = document.createElement('option');
+                    opt.value = data[key].git_url;
+                    opt.textContent = data[key].name;
+                    selectNames.appendChild(opt);
+                });
+            })
+            .catch(function() {
+                window.alert('Repository unreachable');
+            });
+    },
+
+    onchange_crreportnames: function(select) {
+        var path = select.options[select.selectedIndex].value;
+        window.location.href =
+            window.location.href +
+            '&importurl=' + encodeURIComponent(path);
+    },
+
+    onchange_reportcategories: function(select) {
+        var wrapper = document.getElementById('id_reportsincategory');
+        wrapper.style.visibility = 'hidden';
+
+        var category = select.options[select.selectedIndex].value;
+        var url = M.cfg.wwwroot +
+            '/blocks/configurable_reports/list_reports_in_category.php' +
+            '?category=' + encodeURIComponent(category) +
+            '&sesskey=' + encodeURIComponent(M.cfg.sesskey);
+
+        fetch(url)
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                var list = document.createElement('select');
+                list.id = 'id_reportsincategory';
+                list.name = 'reportsincategory';
+                list.classList.add('custom-select');
+                list.style.visibility = 'hidden';
+
+                var defaultOpt = document.createElement('option');
+                defaultOpt.value = '-1';
+                defaultOpt.textContent = 'Choose...';
+                list.appendChild(defaultOpt);
+
+                Object.keys(data).forEach(function(key) {
+                    var opt = document.createElement('option');
+                    opt.value = data[key].fullname;
+                    opt.textContent = data[key].name;
+                    list.appendChild(opt);
+                });
+
+                list.onchange = function() {
+                    M.block_configurable_reports.onchange_reportsincategory(list);
+                };
+
+                wrapper.parentNode.replaceChild(list, wrapper);
+                list.style.visibility = 'visible';
+            })
+            .catch(function() {
+                wrapper.style.visibility = 'hidden';
+            });
+    },
+
+    onchange_reportsincategory: function(select) {
+        var textarea = document.getElementById('id_remotequerysql');
+        var report = select.options[select.selectedIndex].value;
+        var url = M.cfg.wwwroot +
+            '/blocks/configurable_reports/get_remote_report.php' +
+            '?reportname=' + encodeURIComponent(report) +
+            '&sesskey=' + encodeURIComponent(M.cfg.sesskey);
+        fetch(url)
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(text) {
+                textarea.value = text;
+                if (editor_remotequerysql) {
+                    editor_remotequerysql.setValue(text);
                 }
-            }
-        });
-    },
-
-    onchange_reportsincategory: function(select_element) {
-        var Y = this.Y;
-
-        textarea_reportsincategory = Y.one('#id_remotequerysql');
-        Y.io(M.cfg.wwwroot + '/blocks/configurable_reports/get_remote_report.php', {
-            data: 'reportname=' + select_element[select_element.selectedIndex].value + '&sesskey=' + M.cfg.sesskey,
-            context: this,
-            method: "GET",
-            on: {
-                success: function(id, o) {
-                    var response = Y.JSON.parse(o.responseText);
-
-                    // Use regular textarea element.
-                    textarea_reportsincategory.set('value', response);
-
-                    // Use codemirror editor.
-                    editor_remotequerysql.setValue(response);
-                },
-                failure: function(id, o) {
-                    if (o.statusText != 'abort') {
-                        select_reportsincategory.setStyle('visibility', 'hidden');
-                    }
-                }
-            }
-        });
+            })
+            .catch(function() {
+                select.style.visibility = 'hidden';
+            });
     }
-}
+};
 
 function menuplugin(event, args) {
-    location.href = args.url + document.getElementById('menuplugin').value;
+    var select = document.getElementById('menuplugin');
+    window.location.href = args.url + select.value;
 }
