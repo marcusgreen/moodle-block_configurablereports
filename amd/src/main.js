@@ -3,7 +3,7 @@ define(
         'jquery',
         'block_configurable_reports/jquery.tablesorter',
         'block_configurable_reports/jquery.dataTables',
-        'block_configurable_reports/codemirror/lib/codemirror',
+        'block_configurable_reports/codemirror',
         'block_configurable_reports/sql'
     ],
     function($, tablesorter, dataTable, CodeMirror) {
@@ -64,15 +64,6 @@ define(
             },
             cmirror: function() {
                 // Documentation can be found @ http://codemirror.net/
-                CodeMirror.fromTextArea(document.getElementById('id_querysql'), {
-                    mode: "text/x-mysql",
-                    rtlMoveVisually: true,
-                    indentWithTabs: true,
-                    smartIndent: true,
-                    lineNumbers: true,
-                    autofocus: true,
-                });
-
                 CodeMirror.fromTextArea(document.getElementById('id_remotequerysql'), {
                     mode: "text/x-mysql",
                     rtlMoveVisually: true,

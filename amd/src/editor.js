@@ -36,7 +36,7 @@ export const init = () => {
             "Ctrl-Space": "autocomplete"
         }
     });
-    // editor.setSize('100%', 50);
+    editor.setSize('100%', 50);
 
     var editor_remote = CodeMirror.fromTextArea(document.getElementById('id_remotequerysql'), {
         mode: 'text/x-mysql',

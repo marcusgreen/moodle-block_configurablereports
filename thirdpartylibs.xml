@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <libraries>
     <library>
-        <location>amd/src/codemirror.js</location>
+        <location>amd/src/codemirror/lib/codemirror.js</location>
         <name>CodeMirror</name>
         <version>5.41.0</version>
         <license>MIT</license>
