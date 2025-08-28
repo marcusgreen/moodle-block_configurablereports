@@ -56,6 +56,38 @@ class customsql_form extends moodleform {
                 $prefixtable = $table;
                 $tableobject->$prefixtable = array_keys($DB->get_columns($table));
             }
+            $sqlvars =[
+                    'sql_CATEGORYID',
+                    'sql_COURSEID',
+                    'sql_CURRENTUSER'.
+                    'sql_DEBUG',
+                    'sql_FILTER_VAR',
+                    'sql_STARTTIME',
+                    'sql_ENDTIME',
+                    'sql_USERID',
+                    'sql_WWWROOT',
+                    'FILTER_CATEGORIES',
+                    'FILTER_COURSEMODULEID',
+                    'FILTER_COURSEMODULEFIELDS',
+                    'FILTER_COURSEMODULE',
+                    'FILTER_COURSES',
+                    'FILTER_COURSEENROLLEDSTUDENTS',
+                    'FILTER_USERS',
+                    'FILTER_ROLE',
+                    'FILTER_SEARCHTEXT',
+                    'FILTER_SEMESTER',
+                    'FILTER_STARTTIME',
+                    'FILTER_ENDTIME',
+                    'FILTER_SUBCATEGORIES',
+                    'FILTER_COURSEUSER',
+                    'FILTER_SYSTEMUSER',
+                    'FILTER_YEARHEBREW',
+                    'FILTER_YEARNUMERIC',
+            ];
+            foreach($sqlvars as $var) {
+                $tableobject->$var = [];
+            }
+
             $tablejson = json_encode($tableobject);
             $mform->addElement('hidden', 'tablejson', $tablejson, ['id' => 'tablejson']);
             $mform->setType('tablejson', PARAM_RAW);
