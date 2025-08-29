@@ -20,38 +20,34 @@
  * @copyright 2021 Marcus Green
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-import CodeMirror from 'block_configurable_reports/codemirror/lib/codemirror';
+import CodeMirror from 'block_configurable_reports/codemirror/lib/cm6pro-lazy';
 import 'block_configurable_reports/codemirror/mode/sql/sql';
 import 'block_configurable_reports/codemirror/addon/hint/show-hint';
 import 'block_configurable_reports/codemirror/addon/hint/sql-hint';
 
 export const init = () => {
-    var tablejson = document.getElementById('tablejson');
-    var AUTOCOMPLETE_TABLES = JSON.parse(tablejson.value);
-    var editor = CodeMirror.fromTextArea(document.getElementById('id_querysql'), {
-        mode: 'text/x-mysql',
-        styleActiveLine: true,
-        lineNumbers: true,
-        extraKeys: {
-            "Ctrl-Space": "autocomplete"
-        }
+    const tablejson = document.getElementById('tablejson');
+    const AUTOCOMPLETE_TABLES = JSON.parse(tablejson.value);
+    const textarea = document.getElementById('id_querysql');
+    const view = new CodeMirror.EditorView({
+        parent: textarea.parentElement,
+        state: CodeMirror.EditorState.create({
+            doc: textarea.value,
+            extensions: [
+                CodeMirror.basicSetup,
+                CodeMirror.autocompletion({
+                    override: [
+                        (ctx) => CodeMirror.showHint
+                            ? CodeMirror.showHint(ctx, CodeMirror.hint.sql, {
+                                  tables: AUTOCOMPLETE_TABLES,
+                                  disableKeywords: true
+                              })
+                            : null
+                    ]
+                })
+            ]
+        })
     });
-    editor.setSize('100%', 50);
-
-    var editor_remote = CodeMirror.fromTextArea(document.getElementById('id_remotequerysql'), {
-        mode: 'text/x-mysql',
-        styleActiveLine: true,
-        lineNumbers: true,
-        extraKeys: {
-            "Ctrl-Space": "autocomplete"
-        }
-    });
-    editor_remote.setSize('100%', 50);
-
-    CodeMirror.commands.autocomplete = function(cm) {
-        CodeMirror.showHint(cm, CodeMirror.hint.sql, {
-            tables: AUTOCOMPLETE_TABLES,
-            disableKeywords: true
-        });
-    };
+    view.dom.style.width = '100%';
+    view.dom.style.height = '50px';
 };
