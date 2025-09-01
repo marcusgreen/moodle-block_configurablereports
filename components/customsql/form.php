@@ -47,8 +47,10 @@ class customsql_form extends moodleform {
         $mform =& $this->_form;
 
         if (get_config('block_configurable_reports', 'sqlsyntaxhighlight')) {
-            $PAGE->requires->css('/block_configurable_reports/src/amd/src/codemirror/lib/codemirror.css');
-            $PAGE->requires->js_call_amd('block_configurable_reports/editor', 'init');
+            $PAGE->requires->css('/block_configurable_reports/amd/src/codemirror/lib/codemirror.css');
+            $targetid = 'id_querysql';
+            $options = [];
+            $PAGE->requires->js_call_amd('block_configurable_reports/editor', 'init',[$targetid,$options]);
 
             $tablearray = $DB->get_tables();
             $tableobject  = new stdClass();

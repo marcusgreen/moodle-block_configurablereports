@@ -20,34 +20,10 @@
  * @copyright 2021 Marcus Green
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-import CodeMirror from 'block_configurable_reports/codemirror/lib/cm6pro-lazy';
-import 'block_configurable_reports/codemirror/mode/sql/sql';
-import 'block_configurable_reports/codemirror/addon/hint/show-hint';
-import 'block_configurable_reports/codemirror/addon/hint/sql-hint';
-
-export const init = () => {
-    const tablejson = document.getElementById('tablejson');
-    const AUTOCOMPLETE_TABLES = JSON.parse(tablejson.value);
-    const textarea = document.getElementById('id_querysql');
-    const view = new CodeMirror.EditorView({
-        parent: textarea.parentElement,
-        state: CodeMirror.EditorState.create({
-            doc: textarea.value,
-            extensions: [
-                CodeMirror.basicSetup,
-                CodeMirror.autocompletion({
-                    override: [
-                        (ctx) => CodeMirror.showHint
-                            ? CodeMirror.showHint(ctx, CodeMirror.hint.sql, {
-                                  tables: AUTOCOMPLETE_TABLES,
-                                  disableKeywords: true
-                              })
-                            : null
-                    ]
-                })
-            ]
-        })
+export const init = (targetid, options) => {
+    require(['block_configurable_reports/codemirror/lib/cm6pro-lazy'], (CodeProEditor) => {
+        const targetElem = document.getElementById(targetid);
+        alert('mirror');
+        new CodeProEditor(targetElem, options);
     });
-    view.dom.style.width = '100%';
-    view.dom.style.height = '50px';
 };
