@@ -47,7 +47,7 @@ class customsql_form extends moodleform {
         $mform =& $this->_form;
 
         if (get_config('block_configurable_reports', 'sqlsyntaxhighlight')) {
-            $PAGE->requires->css('/block_configurable_reports/amd/src/codemirror/lib/codemirror.css');
+            $PAGE->requires->css('/blocks/configurable_reports/amd/src/codemirror.css');
             $targetid = 'id_querysql';
             $options = [];
             $PAGE->requires->js_call_amd('block_configurable_reports/editor', 'init',[$targetid,$options]);
@@ -96,6 +96,8 @@ class customsql_form extends moodleform {
         }
 
         $mform->addElement('textarea', 'querysql', get_string('querysql', 'block_configurable_reports'), 'rows="35" cols="80"');
+        $mform->addElement('static','ph_querysql','<div id="ph_querysql"></div>');
+        //$mform->addElement('hidden','ph_querysql','PH Quetry sql');
         $mform->addRule('querysql', get_string('required'), 'required', null, 'client');
         $mform->setType('querysql', PARAM_RAW);
 
