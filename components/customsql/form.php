@@ -91,12 +91,12 @@ class customsql_form extends moodleform {
             }
 
             $tablejson = json_encode($tableobject);
-            $mform->addElement('hidden', 'tablejson', $tablejson, ['id' => 'tablejson']);
-            $mform->setType('tablejson', PARAM_RAW);
+            // $mform->addElement('hidden', 'tablejson', $tablejson, ['id' => 'tablejson']);
+            // $mform->setType('tablejson', PARAM_RAW);
         }
 
         $mform->addElement('textarea', 'querysql', get_string('querysql', 'block_configurable_reports'), 'rows="35" cols="80"');
-        $mform->addElement('static','ph_querysql','<div id="ph_querysql"></div>');
+        $mform->addElement('static','ph_querysql','<div class="CodeMirror" id="ph_querysql"></div>');
         //$mform->addElement('hidden','ph_querysql','PH Quetry sql');
         $mform->addRule('querysql', get_string('required'), 'required', null, 'client');
         $mform->setType('querysql', PARAM_RAW);
@@ -108,40 +108,40 @@ class customsql_form extends moodleform {
 
         $mform->addElement('static', 'note', '', get_string('listofsqlreports', 'block_configurable_reports'));
 
-        if ($userandrepo = get_config('block_configurable_reports', 'sharedsqlrepository')) {
+        // if ($userandrepo = get_config('block_configurable_reports', 'sharedsqlrepository')) {
 
-            $github = new \block_configurable_reports\github;
-            $github->set_repo($userandrepo);
-            $res = $github->get('/contents');
-            $res = json_decode($res);
+        //     $github = new \block_configurable_reports\github;
+        //     $github->set_repo($userandrepo);
+        //     $res = $github->get('/contents');
+        //     $res = json_decode($res);
 
-            if (is_array($res)) {
-                $reportcategories = [get_string('choose')];
+        //     if (is_array($res)) {
+        //         $reportcategories = [get_string('choose')];
 
-                foreach ($res as $item) {
-                    if ($item->type === 'dir') {
-                        $reportcategories[$item->path] = $item->path;
-                    }
-                }
+        //         foreach ($res as $item) {
+        //             if ($item->type === 'dir') {
+        //                 $reportcategories[$item->path] = $item->path;
+        //             }
+        //         }
 
-                $reportcatstr = get_string('reportcategories', 'block_configurable_reports');
-                $reportcatattrs =
-                    ['onchange' => 'M.block_configurable_reports.onchange_reportcategories(this,"' . sesskey() . '")'];
-                $mform->addElement('select', 'reportcategories', $reportcatstr, $reportcategories, $reportcatattrs);
+        //         $reportcatstr = get_string('reportcategories', 'block_configurable_reports');
+        //         $reportcatattrs =
+        //             ['onchange' => 'M.block_configurable_reports.onchange_reportcategories(this,"' . sesskey() . '")'];
+        //         $mform->addElement('select', 'reportcategories', $reportcatstr, $reportcategories, $reportcatattrs);
 
-                $reportsincatstr = get_string('reportsincategory', 'block_configurable_reports');
-                $reportsincatattrs =
-                    ['onchange' => 'M.block_configurable_reports.onchange_reportsincategory(this,"' . sesskey() . '")'];
-                $mform->addElement('select', 'reportsincategory', $reportsincatstr, $reportcategories, $reportsincatattrs);
+        //         $reportsincatstr = get_string('reportsincategory', 'block_configurable_reports');
+        //         $reportsincatattrs =
+        //             ['onchange' => 'M.block_configurable_reports.onchange_reportsincategory(this,"' . sesskey() . '")'];
+        //         $mform->addElement('select', 'reportsincategory', $reportsincatstr, $reportcategories, $reportsincatattrs);
 
-                $mform->addElement(
-                    'textarea',
-                    'remotequerysql',
-                    get_string('remotequerysql', 'block_configurable_reports'),
-                    'rows="15" cols="90"'
-                );
-            }
-        }
+        //         $mform->addElement(
+        //             'textarea',
+        //             'remotequerysql',
+        //             get_string('remotequerysql', 'block_configurable_reports'),
+        //             'rows="15" cols="90"'
+        //         );
+        //     }
+        // }
     }
 
     /**
