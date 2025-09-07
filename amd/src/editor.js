@@ -22,11 +22,19 @@
  */
 
 
-import {component, pluginName, codeMirrorStyle} from './common';
+import {
+    component,
+    pluginName,
+    codeMirrorStyle
+} from './common';
 
 /* eslint-disable camelcase */
-import {html_beautify} from './beautify/beautify-html';
-import {get_strings} from 'core/str';
+import {
+    html_beautify
+} from './beautify/beautify-html';
+import {
+    get_strings
+} from 'core/str';
 /* eslint-enable camelcase */
 import {
     EditorState,
@@ -49,45 +57,46 @@ const beautifyOptions = {
 /* eslint-enable camelcase */
 export const init = (targetid) => {
 
-            debugger;
-            const content = document.getElementById('id_querysql').value;
-            // Beautify the content using html_beautify
-            const beautifiedContent = html_beautify(content, beautifyOptions);
+    debugger;
+    const content = document.getElementById('id_querysql').value;
+    // Beautify the content using html_beautify
+    const beautifiedContent = html_beautify(content, beautifyOptions);
 
-            // Create the CodeMirror instance
-            let cmInstance;
+    // Create the CodeMirror instance
+    let cmInstance;
 
-            let state = EditorState.create({
-                doc: beautifiedContent,
-                // This is where basicSetup should go as [basicSetup, ...].
-                extensions: [
-                    basicSetup,
-                    EditorState.tabSize.of(2),
-                    // Bring in all language extensions.
-                    ...Object.entries(lang).map(([, languagePlugin]) => languagePlugin()),
-                ],
-            });
+    let state = EditorState.create({
+        doc: beautifiedContent,
+        // This is where basicSetup should go as [basicSetup, ...].
+        extensions: [
+            basicSetup,
+            EditorState.tabSize.of(2),
+            // Bring in all language extensions.
+            ...Object.entries(lang).map(([, languagePlugin]) => languagePlugin()),
+        ],
+    });
 
 
-            const container = document.getElementById('ph_querysql');
-            // Create a shadow root for the CodeMirror instance.
-            // This is required to prevent the TinyMCE editor styles from overriding the CodeMirror ones.
-            const shadowRoot = container.attachShadow({mode: "open"});
+    const container = document.getElementById('ph_querysql');
+    // Create a shadow root for the CodeMirror instance.
+    // This is required to prevent the TinyMCE editor styles from overriding the CodeMirror ones.
+    const shadowRoot = container.attachShadow({
+        mode: "open"
+    });
 
-            // Add the styles to the shadow root
-            const style = document.createElement('style');
-            style.textContent = codeMirrorStyle;
-            shadowRoot.appendChild(style);
+    // Add the styles to the shadow root
+    const style = document.createElement('style');
+    style.textContent = codeMirrorStyle;
+    shadowRoot.appendChild(style);
 
-            // Create a new div and add the class 'my-codemirror-container'
-            const div = document.createElement('div');
-            div.classList.add('modal-codemirror-container');
-            shadowRoot.appendChild(div);
+    // Create a new div and add the class 'my-codemirror-container'
+    const div = document.createElement('div');
+    div.classList.add('CodeMirror');
+    shadowRoot.appendChild(div);
 
-            // Create the CodeMirror instance
-            cmInstance = new EditorView({
-                state,
-                parent: div,
-            });
-        };
-
+    // Create the CodeMirror instance
+    cmInstance = new EditorView({
+        state,
+        parent: div,
+    });
+};
