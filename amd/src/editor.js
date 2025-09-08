@@ -29,9 +29,12 @@ import {
 } from './common';
 
 /* eslint-disable camelcase */
+
 import {
     html_beautify
 } from './beautify/beautify-html';
+
+
 import {
     get_strings
 } from 'core/str';
