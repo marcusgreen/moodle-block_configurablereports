@@ -50,54 +50,51 @@ class customsql_form extends moodleform {
             $PAGE->requires->css('/blocks/configurable_reports/amd/src/codemirror.css');
             $targetid = 'id_querysql';
             $options = [];
-            $PAGE->requires->js_call_amd('block_configurable_reports/editor', 'init',[$targetid,$options]);
+            $PAGE->requires->js_call_amd('block_configurable_reports/editor', 'init', [$targetid, $options]);
 
             $tablearray = $DB->get_tables();
-            $tableobject  = new stdClass();
+            $tableobject = new stdClass();
             foreach ($tablearray as $table) {
-                $prefixtable = $table;
-                $tableobject->$prefixtable = array_keys($DB->get_columns($table));
+                $tableobject->$table = array_keys($DB->get_columns($table));
             }
-            $sqlvars =[
-                    'sql_CATEGORYID',
-                    'sql_COURSEID',
-                    'sql_CURRENTUSER'.
-                    'sql_DEBUG',
-                    'sql_FILTER_VAR',
-                    'sql_STARTTIME',
-                    'sql_ENDTIME',
-                    'sql_USERID',
-                    'sql_WWWROOT',
-                    'FILTER_CATEGORIES',
-                    'FILTER_COURSEMODULEID',
-                    'FILTER_COURSEMODULEFIELDS',
-                    'FILTER_COURSEMODULE',
-                    'FILTER_COURSES',
-                    'FILTER_COURSEENROLLEDSTUDENTS',
-                    'FILTER_USERS',
-                    'FILTER_ROLE',
-                    'FILTER_SEARCHTEXT',
-                    'FILTER_SEMESTER',
-                    'FILTER_STARTTIME',
-                    'FILTER_ENDTIME',
-                    'FILTER_SUBCATEGORIES',
-                    'FILTER_COURSEUSER',
-                    'FILTER_SYSTEMUSER',
-                    'FILTER_YEARHEBREW',
-                    'FILTER_YEARNUMERIC',
+            $sqlvars = [
+                'sql_CATEGORYID',
+                'sql_COURSEID',
+                'sql_CURRENTUSER',
+                'sql_DEBUG',
+                'sql_FILTER_VAR',
+                'sql_STARTTIME',
+                'sql_ENDTIME',
+                'sql_USERID',
+                'sql_WWWROOT',
+                'FILTER_CATEGORIES',
+                'FILTER_COURSEMODULEID',
+                'FILTER_COURSEMODULEFIELDS',
+                'FILTER_COURSEMODULE',
+                'FILTER_COURSES',
+                'FILTER_COURSEENROLLEDSTUDENTS',
+                'FILTER_USERS',
+                'FILTER_ROLE',
+                'FILTER_SEARCHTEXT',
+                'FILTER_SEMESTER',
+                'FILTER_STARTTIME',
+                'FILTER_ENDTIME',
+                'FILTER_SUBCATEGORIES',
+                'FILTER_COURSEUSER',
+                'FILTER_SYSTEMUSER',
+                'FILTER_YEARHEBREW',
+                'FILTER_YEARNUMERIC',
             ];
-            foreach($sqlvars as $var) {
+            foreach ($sqlvars as $var) {
                 $tableobject->$var = [];
             }
 
             $tablejson = json_encode($tableobject);
-            // $mform->addElement('hidden', 'tablejson', $tablejson, ['id' => 'tablejson']);
-            // $mform->setType('tablejson', PARAM_RAW);
+            $mform->addElement('hidden', 'tablejson', $tablejson, ['id' => 'tablejson']);
+            $mform->setType('tablejson', PARAM_RAW);
         }
 
         $mform->addElement('textarea', 'querysql', get_string('querysql', 'block_configurable_reports'), 'rows="35" cols="80"');
-        $mform->addElement('static','ph_querysql','<div class="CodeMirror" id="ph_querysql"></div>');
-        //$mform->addElement('hidden','ph_querysql','PH Quetry sql');
         $mform->addRule('querysql', get_string('required'), 'required', null, 'client');
         $mform->setType('querysql', PARAM_RAW);
 

@@ -1,4 +1,4 @@
-// This file is part of Moodle - https://moodle.org/
+// This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -11,95 +11,81 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Tiny tiny_html for Moodle.
+ * CodeMirror 6 SQL editor with schema-aware autocomplete for block_configurable_reports.
  *
- * @module      tiny_html/plugin
- * @copyright   2023 Matt Porritt <matt.porritt@moodle.com>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @module     block_configurable_reports/editor
+ * @copyright  2025 Marcus Green
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
-import {
-    component,
-    pluginName,
-    codeMirrorStyle
-} from './common';
-
-/* eslint-disable camelcase */
-
-import {
-    html_beautify
-} from './beautify/beautify-html';
-
-
-import {
-    get_strings
-} from 'core/str';
-/* eslint-enable camelcase */
 import {
     EditorState,
     EditorView,
     basicSetup,
-    lang,
+    sql,
+    MySQL,
 } from './codemirror-lazy';
 
 /**
- * Options for the html_beautify function.
- * We disable the camelCase check here as these are
- * variables that we are passing to the js-beautify library.
+ * Initialise a CodeMirror 6 SQL editor replacing the textarea with the given id.
+ * Reads table/column schema from the hidden tablejson field for autocomplete hints.
+ *
+ * @param {string} targetid - The id of the textarea element to replace
+ * @param {Object} options - Optional configuration (reserved for future use)
  */
-/* eslint-disable camelcase */
-const beautifyOptions = {
-    indent_size: 2,
-    wrap_line_length: 80,
-    unformatted: [],
-};
-/* eslint-enable camelcase */
-export const init = (targetid) => {
+export const init = (targetid, options = {}) => { // eslint-disable-line no-unused-vars
+    const textarea = document.getElementById(targetid);
+    if (!textarea) {
+        return;
+    }
 
-    debugger;
-    const content = document.getElementById('id_querysql').value;
-    // Beautify the content using html_beautify
-    const beautifiedContent = html_beautify(content, beautifyOptions);
+    const schemaElement = document.getElementById('tablejson');
+    let schema = {};
+    if (schemaElement) {
+        try {
+            schema = JSON.parse(schemaElement.value);
+        } catch (e) {
+            // Schema unavailable; autocomplete will still work for SQL keywords.
+        }
+    }
 
-    // Create the CodeMirror instance
-    let cmInstance;
+    const heightTheme = EditorView.theme({
+        "&": {height: "190px"},
+        ".cm-scroller": {overflow: "auto"},
+    });
 
-    let state = EditorState.create({
-        doc: beautifiedContent,
-        // This is where basicSetup should go as [basicSetup, ...].
+    const state = EditorState.create({
+        doc: textarea.value,
         extensions: [
             basicSetup,
-            EditorState.tabSize.of(2),
-            // Bring in all language extensions.
-            ...Object.entries(lang).map(([, languagePlugin]) => languagePlugin()),
+            sql({dialect: MySQL, schema: schema, upperCaseKeywords: true}),
+            EditorView.lineWrapping,
+            heightTheme,
+            EditorView.updateListener.of((update) => {
+                if (update.docChanged) {
+                    textarea.value = update.state.doc.toString();
+                }
+            }),
         ],
     });
 
+    const container = document.createElement('div');
+    container.className = 'codemirror-sql-editor';
+    container.style.width = '100%';
+    textarea.parentNode.insertBefore(container, textarea);
+    textarea.style.display = 'none';
 
-    const container = document.getElementById('ph_querysql');
-    // Create a shadow root for the CodeMirror instance.
-    // This is required to prevent the TinyMCE editor styles from overriding the CodeMirror ones.
-    const shadowRoot = container.attachShadow({
-        mode: "open"
-    });
-
-    // Add the styles to the shadow root
-    const style = document.createElement('style');
-    style.textContent = codeMirrorStyle;
-    shadowRoot.appendChild(style);
-
-    // Create a new div and add the class 'my-codemirror-container'
-    const div = document.createElement('div');
-    div.classList.add('CodeMirror');
-    shadowRoot.appendChild(div);
-
-    // Create the CodeMirror instance
-    cmInstance = new EditorView({
+    new EditorView({
         state,
-        parent: div,
+        parent: container,
     });
+
+    if (textarea.form) {
+        textarea.form.addEventListener('submit', () => {
+            textarea.value = state.doc.toString();
+        });
+    }
 };
