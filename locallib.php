@@ -51,59 +51,14 @@ function cr_print_js_function() {
 }
 
 /**
- * cr_add_jsdatatables
- *
- * @param string $cssid
- * @param moodle_page $page
- * @return void
- */
-function cr_add_jsdatatables(string $cssid, moodle_page $page) {
-    $data = [];
-    $data['selector'] = $cssid;
-
-    $page->requires->string_for_js('thousandssep', 'langconfig');
-    $page->requires->strings_for_js(
-        [
-            'datatables_sortascending',
-            'datatables_sortdescending',
-            'datatables_first',
-            'datatables_last',
-            'datatables_next',
-            'datatables_previous',
-            'datatables_emptytable',
-            'datatables_info',
-            'datatables_infoempty',
-            'datatables_infofiltered',
-            'datatables_lengthmenu',
-            'datatables_loadingrecords',
-            'datatables_processing',
-            'datatables_search',
-            'datatables_zerorecords',
-        ],
-        'block_configurable_reports'
-    );
-
-    $page->requires->js_call_amd('block_configurable_reports/main', 'add_jsdatatables', [$data]);
-}
-
-/**
  * cr_add_jsordering
  *
  * @param string $cssid
  * @param moodle_page|null $page
  */
 function cr_add_jsordering(string $cssid, moodle_page $page = null) {
-    global $OUTPUT;
-
     if (!empty($page)) {
-        $data = [];
-        $data['selector'] = $cssid;
-        if (method_exists($OUTPUT, 'image_url')) {
-            $data['background'] = $OUTPUT->image_url('normal', 'block_configurable_reports')->out();
-            $data['backgroundasc'] = $OUTPUT->image_url('asc', 'block_configurable_reports')->out();
-            $data['backgrounddesc'] = $OUTPUT->image_url('desc', 'block_configurable_reports')->out();
-        }
-        $page->requires->js_call_amd('block_configurable_reports/main', 'js_order', [$data]);
+        $page->requires->js_call_amd('block_configurable_reports/tablesort', 'init', [$cssid]);
     }
 }
 

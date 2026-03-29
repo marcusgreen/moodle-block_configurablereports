@@ -44,9 +44,7 @@ class component_customsql extends component_base {
         $this->form = true;
         $this->help = true;
 
-        if (get_config('block_configurable_reports', 'sqlsyntaxhighlight')) {
-            $PAGE->requires->js_call_amd('block_configurable_reports/main', 'cmirror');
-        }
+
     }
 
     /**

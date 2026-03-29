@@ -999,3 +999,22 @@ span.CodeMirror-selectedtext {
 #page-blocks-configurable_reports-editreport .CodeMirror {
     width: 100%;
 }
+
+/* Tablesort sort indicators */
+th[role="columnheader"] {
+    cursor: pointer;
+    user-select: none;
+}
+
+th[role="columnheader"]:not([aria-sort])::after {
+    content: " \21C5";
+    opacity: 0.4;
+}
+
+th[aria-sort="ascending"]::after {
+    content: " \25B2";
+}
+
+th[aria-sort="descending"]::after {
+    content: " \25BC";
+}

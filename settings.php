@@ -97,11 +97,11 @@ if ($ADMIN->fulltree) {
         )
     );
 
-    $reporttableoptions = ['html' => 'Simple', 'jquery' => 'jQuery', 'datatables' => 'DataTables JS'];
+    $reporttableoptions = ['html' => 'Simple', 'tablesort' => 'Tablesort'];
     $settings->add(
         new admin_setting_configselect(
             'block_configurable_reports/reporttableui', get_string('reporttableui', 'block_configurable_reports'),
-            get_string('reporttableuiinfo', 'block_configurable_reports'), 'datatables', $reporttableoptions
+            get_string('reporttableuiinfo', 'block_configurable_reports'), 'tablesort', $reporttableoptions
         )
     );
 
