@@ -52,6 +52,12 @@ export const init = (targetid, options = {}) => { // eslint-disable-line no-unus
         }
     }
 
+    // Build table completions that wrap DB table names in Moodle's {tablename} syntax.
+    // Filter variables (sql_* and FILTER_*) are excluded as they use %%var%% syntax instead.
+    const tables = Object.keys(schema)
+        .filter(name => !name.startsWith('sql_') && !name.startsWith('FILTER_'))
+        .map(name => ({label: name, apply: `{${name}}`}));
+
     const heightTheme = EditorView.theme({
         "&": {height: "190px"},
         ".cm-scroller": {overflow: "auto"},
@@ -61,7 +67,7 @@ export const init = (targetid, options = {}) => { // eslint-disable-line no-unus
         doc: textarea.value,
         extensions: [
             basicSetup,
-            sql({dialect: MySQL, schema: schema, upperCaseKeywords: true}),
+            sql({dialect: MySQL, schema: schema, tables: tables, upperCaseKeywords: true}),
             EditorView.lineWrapping,
             heightTheme,
             EditorView.updateListener.of((update) => {
