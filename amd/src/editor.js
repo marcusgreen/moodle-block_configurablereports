@@ -84,14 +84,14 @@ export const init = (targetid, options = {}) => { // eslint-disable-line no-unus
     textarea.parentNode.insertBefore(container, textarea);
     textarea.style.display = 'none';
 
-    new EditorView({
+    const view = new EditorView({
         state,
         parent: container,
     });
 
     if (textarea.form) {
         textarea.form.addEventListener('submit', () => {
-            textarea.value = state.doc.toString();
+            textarea.value = view.state.doc.toString();
         });
     }
 };

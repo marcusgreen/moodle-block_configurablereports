@@ -95,7 +95,7 @@ class customsql_form extends moodleform {
         }
 
         $mform->addElement('textarea', 'querysql', get_string('querysql', 'block_configurable_reports'), 'rows="35" cols="80"');
-        $mform->addRule('querysql', get_string('required'), 'required', null, 'client');
+        $mform->addRule('querysql', get_string('required'), 'required', null, 'server');
         $mform->setType('querysql', PARAM_RAW);
 
         $mform->addElement('hidden', 'courseid', $COURSE->id);
