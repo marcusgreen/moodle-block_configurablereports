@@ -81,7 +81,7 @@ class report_sql extends report_base {
      * @return array|string|string[]
      */
     public function prepare_sql(string $sql) {
-        global $USER, $CFG, $COURSE;
+        global $USER, $CFG, $COURSE, $DB;
 
         // Enable debug mode from SQL query.
         $this->config->debug = strpos($sql, '%%DEBUG%%') !== false;
@@ -106,6 +106,14 @@ class report_sql extends report_base {
             [$USER->id, $COURSE->id, $COURSE->category, '0', '2145938400', $CFG->wwwroot],
             $sql);
         $sql = preg_replace('/%{2}[^%]+%{2}/i', '', $sql);
+
+        // Wrap bare tablename.column references (e.g. user.id) in Moodle's {tablename}.column
+        // syntax so the DB prefix gets applied correctly. Skip names already wrapped in {}.
+        $tables = $DB->get_tables(false);
+        if (!empty($tables)) {
+            $pattern = '/(?<!\{)\b(' . implode('|', array_map('preg_quote', $tables)) . ')\b(?!\})\./';
+            $sql = preg_replace($pattern, '{$1}.', $sql);
+        }
 
         return str_replace('?', '[[QUESTIONMARK]]', $sql);
     }
