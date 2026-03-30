@@ -28076,4 +28076,4 @@ the highlight style).
 */
 const oneDark = [oneDarkTheme, /*@__PURE__*/syntaxHighlighting(oneDarkHighlightStyle)];
 
-export { EditorState, EditorView, MSSQL, MySQL, PostgreSQL, SQLite, StandardSQL, basicSetup, oneDark, sql };
+export { EditorState, EditorView, MSSQL, MySQL, PostgreSQL, SQLite, StandardSQL, acceptCompletion, basicSetup, keymap, oneDark, sql };

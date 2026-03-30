@@ -24,7 +24,9 @@
 import {
     EditorState,
     EditorView,
+    acceptCompletion,
     basicSetup,
+    keymap,
     sql,
     MySQL,
 } from './codemirror-lazy';
@@ -68,6 +70,7 @@ export const init = (targetid, options = {}) => { // eslint-disable-line no-unus
         extensions: [
             basicSetup,
             sql({dialect: MySQL, schema: schema, tables: tables, upperCaseKeywords: true}),
+            keymap.of([{key: "Tab", run: acceptCompletion}]),
             EditorView.lineWrapping,
             heightTheme,
             EditorView.updateListener.of((update) => {
